@@ -32,10 +32,11 @@ const coolWebsite = new aws.s3.BucketObject(`${stack}-cool-website`, {
 const envResourceGroup = new aws.resourcegroups.Group(`${stack}-env-rg`, {
   resourceQuery: {
     query: JSON.stringify({
+      ResourceTypeFilters: ["AWS::AllSupported"],
       TagFilters: [
         {
           Key: "stack",
-          Value: [tags.stack],
+          Values: [tags.stack],
         },
       ],
     }),
@@ -44,21 +45,19 @@ const envResourceGroup = new aws.resourcegroups.Group(`${stack}-env-rg`, {
 
 // This resource group contains ALL our resources - only update this when we roll to production
 if (stack == "production") {
-  const projectResourceGroup = new aws.resourcegroups.Group(
-    `${stack}-project-rg`,
-    {
-      resourceQuery: {
-        query: JSON.stringify({
-          TagFilters: [
-            {
-              Key: "project",
-              Value: [tags.project],
-            },
-          ],
-        }),
-      },
-    }
-  );
+  const projectResourceGroup = new aws.resourcegroups.Group(`project-rg`, {
+    resourceQuery: {
+      query: JSON.stringify({
+        ResourceTypeFilters: ["AWS::AllSupported"],
+        TagFilters: [
+          {
+            Key: "project",
+            Values: [tags.project],
+          },
+        ],
+      }),
+    },
+  });
 }
 
 // Export name - this becomes available to other projects
