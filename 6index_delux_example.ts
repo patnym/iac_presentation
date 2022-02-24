@@ -63,4 +63,4 @@ if (stack == "production") {
 
 // Export name - this becomes available to other projects
 export const bucketName = mybucket.bucket;
-export const websiteUrl = `http://${mybucket.bucketDomainName}`;
+export const websiteUrl = pulumi.interpolate`http://${mybucket.bucket}.${mybucket.websiteDomain}`;
